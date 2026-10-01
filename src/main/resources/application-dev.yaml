@@ -1,6 +1,13 @@
 spring:
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9000
   application:
     name: auth-server
+  sql:
+    init:
+      mode: always
 
   datasource:
     url: jdbc:postgresql://localhost:30432/neo_authserver
@@ -14,6 +21,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2.server.authorization: TRACE
 
 server:
   port: 9000
