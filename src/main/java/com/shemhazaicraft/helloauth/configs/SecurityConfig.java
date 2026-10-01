@@ -20,10 +20,21 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize ->
                         authorize
+                                .requestMatchers("/login")
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
-                .formLogin(form -> {});
+                .csrf(csrf ->
+                        csrf.ignoringRequestMatchers("/login")
+                )
+                .formLogin(form ->
+                        form
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("http://localhost:3000", false)
+                                .permitAll()
+                );
 
         return http.build();
     }
@@ -32,5 +43,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

@@ -1,5 +1,7 @@
 package com.shemhazaicraft.helloauth.user;
 
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +17,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username)
+    @NonNull
+    public UserDetails loadUserByUsername(@NonNull String username)
             throws UsernameNotFoundException {
 
         User user = userRepository.findByUsername(username)
@@ -25,12 +28,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         )
                 );
 
+        var authorities = user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(
+                        "ROLE_" + role.getName()
+                ))
+                .toList();
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
                 .disabled(!user.isEnabled())
-                .roles("USER")
+                .authorities(authorities)
                 .build();
     }
-
 }
