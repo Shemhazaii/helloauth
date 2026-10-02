@@ -6,6 +6,8 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +21,13 @@ import java.util.Base64;
 
 @Configuration
 public class JWKConfig {
+
+    @Bean
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+        return OAuth2AuthorizationServerConfiguration.jwtDecoder(
+                jwkSource
+        );
+    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
@@ -50,8 +59,7 @@ public class JWKConfig {
         }
     }
 
-    private RSAPrivateKey loadPrivateKey(Path path)
-            throws Exception {
+    private RSAPrivateKey loadPrivateKey(Path path) throws Exception {
 
         byte[] keyBytes = readPem(path, "PRIVATE KEY");
 
@@ -64,8 +72,7 @@ public class JWKConfig {
         return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
     }
 
-    private RSAPublicKey loadPublicKey(Path path)
-            throws Exception {
+    private RSAPublicKey loadPublicKey(Path path) throws Exception {
 
         byte[] keyBytes = readPem(path, "PUBLIC KEY");
 
@@ -78,10 +85,7 @@ public class JWKConfig {
         return (RSAPublicKey) keyFactory.generatePublic(keySpec);
     }
 
-    private byte[] readPem(
-            Path path,
-            String type
-    ) throws IOException {
+    private byte[] readPem(Path path, String type) throws IOException {
 
         String pem = Files.readString(path);
 
@@ -92,5 +96,7 @@ public class JWKConfig {
 
         return Base64.getDecoder().decode(base64);
     }
+
+
 
 }

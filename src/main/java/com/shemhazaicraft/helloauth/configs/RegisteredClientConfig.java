@@ -48,7 +48,6 @@ public class RegisteredClientConfig {
                     .scope(
                             org.springframework.security.oauth2.core.oidc.OidcScopes.EMAIL
                     )
-                    .scope("wadididaw")
                     .clientSettings(
                             ClientSettings.builder()
                                     .requireProofKey(true)
@@ -59,28 +58,6 @@ public class RegisteredClientConfig {
 
             repository.save(client);
         }
-
-        System.out.println(
-                "=== HELLOAUTH REGISTERED CLIENT ==="
-        );
-        System.out.println(
-                "clientId = " + client.getClientId()
-        );
-        System.out.println(
-                "requireProofKey = " +
-                        client.getClientSettings().isRequireProofKey()
-        );
-        System.out.println(
-                "requireAuthorizationConsent = " +
-                        client.getClientSettings()
-                                .isRequireAuthorizationConsent()
-        );
-        System.out.println(
-                "scopes = " + client.getScopes()
-        );
-        System.out.println(
-                "===================================="
-        );
 
         return repository;
     }

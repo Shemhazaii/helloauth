@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -15,13 +16,10 @@ public class AuthorizationServerConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(
-            HttpSecurity http,
-            OAuth2AuthorizationService authorizationService,
-            OAuth2AuthorizationConsentService authorizationConsentService
-    ) throws Exception {
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http, OAuth2AuthorizationService authorizationService, OAuth2AuthorizationConsentService authorizationConsentService) throws Exception {
 
         http
+                .cors(Customizer.withDefaults())
                 .oauth2AuthorizationServer(authorizationServer -> {
 
                     http.securityMatcher(
@@ -55,4 +53,13 @@ public class AuthorizationServerConfig {
 
         return http.build();
     }
+
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        return AuthorizationServerSettings.builder()
+                .issuer("http://localhost:9000")
+                .build();
+    }
+
 }
+
