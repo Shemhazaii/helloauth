@@ -25,6 +25,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "helloauth_sub", unique = true, length = 255)
+    private String helloauthSub;
+
     @Column(nullable = false, length = 50)
     private String username;
 
