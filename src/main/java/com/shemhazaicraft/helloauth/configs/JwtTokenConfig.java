@@ -1,5 +1,6 @@
 package com.shemhazaicraft.helloauth.configs;
 
+import com.shemhazaicraft.helloauth.storage.ProfilePictureUrlService;
 import com.shemhazaicraft.helloauth.user.Role;
 import com.shemhazaicraft.helloauth.user.User;
 import com.shemhazaicraft.helloauth.user.UserRepository;
@@ -15,6 +16,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Configuration
 public class JwtTokenConfig {
+
+    private final ProfilePictureUrlService profilePictureUrlService;
+
+    public JwtTokenConfig(ProfilePictureUrlService profilePictureUrlService) {
+        this.profilePictureUrlService = profilePictureUrlService;
+    }
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer(
@@ -35,6 +42,13 @@ public class JwtTokenConfig {
                     .stream()
                     .map(Role::getName)
                     .collect(Collectors.toCollection(ArrayList::new));
+
+            if (user.getPicture() != null) {
+                context.getClaims().claim(
+                        "picture",
+                        profilePictureUrlService.generateUrl(user.getId())
+                );
+            }
 
 
             if (context.getTokenType().getValue().equals("access_token")) {

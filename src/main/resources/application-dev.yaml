@@ -35,3 +35,5 @@ storage:
   access-key: loki
   secret-key: supersecret
   bucket-name: helloauth
+helloauth:
+  public-base-url: http://localhost:9000

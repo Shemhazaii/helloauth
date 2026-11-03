@@ -106,7 +106,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/login", "/api/csrf")
+                                .requestMatchers("/login", "/api/csrf","/api/v1/public/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
