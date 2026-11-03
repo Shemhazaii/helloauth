@@ -29,3 +29,9 @@ logging:
 
 server:
   port: 9000
+
+storage:
+  url: http://100.92.228.9:30903
+  access-key: loki
+  secret-key: supersecret
+  bucket-name: helloauth

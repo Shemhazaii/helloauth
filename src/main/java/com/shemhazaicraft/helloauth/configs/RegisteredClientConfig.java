@@ -36,6 +36,7 @@ public class RegisteredClientConfig {
         createHelloAuthNextJs(repository);
         createAccountCenter(repository);
         createOpenWebUi(repository);
+        createPostman(repository);
 
         return repository;
     }
@@ -134,6 +135,43 @@ public class RegisteredClientConfig {
                 )
                 .postLogoutRedirectUri(
                         "http://localhost:3002"
+                )
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .scope(OidcScopes.EMAIL)
+                .clientSettings(
+                        ClientSettings.builder()
+                                .requireProofKey(true)
+                                .requireAuthorizationConsent(true)
+                                .build()
+                )
+                .build();
+
+        repository.save(client);
+    }
+
+
+    private void createPostman(
+            RegisteredClientRepository repository
+    ) {
+        if (repository.findByClientId("postman") != null) {
+            return;
+        }
+
+        RegisteredClient client = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("postman")
+                .clientAuthenticationMethod(
+                        ClientAuthenticationMethod.NONE
+                )
+                .authorizationGrantType(
+                        AuthorizationGrantType.AUTHORIZATION_CODE
+                )
+                .redirectUri(
+                        "https://oauth.pstmn.io/v1/callback"
+                )
+                .postLogoutRedirectUri(
+                        "http://localhost:3001"
                 )
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
